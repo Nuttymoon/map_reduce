@@ -1,4 +1,7 @@
 # Purpose : pivot .csv file matrix
+# My idea was to use the column indexes of the initial matrix as keys
+# to gather all the cells of a column in a list,
+# each list corresponding to a line in the pivoted matrix we want to write in the .csv
 
 # Here we emulate the input reader,
 # it creates a list of (key, value) from a .csv file.
@@ -28,6 +31,7 @@ print(csv_lines)
 # It creates a new (key, value) pair and adds it to the context:
 # key = cell's column index
 # value = [cell's line index, cell's value]
+# (We have to keep track of the line indexes to order the cells' values after the shuffle/sort)
 
 
 def map_function(key, value, context):
@@ -85,7 +89,7 @@ def reduce_function(key, values, context):
     for value in values:
         output_value[value[0]] = value[1]
     # We add the new (key, value) to the context
-    context.append([1,output_value])
+    context.append([key, output_value])
     return
 
 
@@ -96,6 +100,7 @@ print(context2)
 
 # Output
 # [[1, ['48', '67', '35', '59']]]
-# This output corresponds to the column 1 of the original matrix
 
-# Every result of a reducer corresponds to a new line of the pivoted matrix
+# This output corresponds to the column 1 of the original matrix
+# Every result of a reducer corresponds to a new line of the pivoted matrix.
+# The output writer can write the pivoted matrix to the .csv file by line.
