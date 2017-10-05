@@ -1,7 +1,8 @@
 # Purpose : pivot .csv file matrix
 # My idea was to use the column indexes of the initial matrix as keys
 # to gather all the cells of a column in a list,
-# each list corresponding to a line in the pivoted matrix we want to write in the .csv
+# each list corresponding to a line in the pivoted matrix we want to write in the .csv.
+# We assume that we made all the keys and values classes serializable.
 
 # Here we emulate the input reader,
 # it creates a list of (key, value) from a .csv file.
@@ -39,7 +40,7 @@ def map_function(key, value, context):
     # For each cell of the .csv line
     for cell in value:
         # We add the new (key, value) to the context
-        context += [[i, [key, cell]]]
+        context.append([[i, [key, cell]]])
         i += 1
     return
 
@@ -47,8 +48,8 @@ def map_function(key, value, context):
 # We can see the result of the 4 maps
 context1 = []
 # Each line in the .csv is processed on a separate mapper
-for lines in csv_lines:
-    map_function(lines[0], lines[1], context1)
+for line in csv_lines:
+    map_function(line[0], line[1], context1)
 print(context1)
 
 # Output:
